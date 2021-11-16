@@ -3,5 +3,6 @@
 
 void initGrid(int,int);
 void drawGrid();
+void snake();
 
 #endif
