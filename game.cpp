@@ -3,6 +3,9 @@
 #include "game.h"
 
 int gridX, gridY;
+short snakeDirect = RIGHT;
+
+float posX=37,posY=37;
 
 void initGrid(int x, int y)
 {
@@ -41,4 +44,18 @@ void unit(int x, int y)
         glVertex2f(x+1,y+1);
         glVertex2f(x,y+1);
     glEnd();
+}
+
+void snake()
+{
+    if(snakeDirect==UP)
+        posY++;
+    else if(snakeDirect==DOWN)
+        posY--;
+    else if(snakeDirect==RIGHT)
+        posX++;
+    else if(snakeDirect==LEFT)
+        posX--;
+
+    glRectd(posX,posY,posX+1,posY+1);
 }
