@@ -1,12 +1,17 @@
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include "game.h"
+#include <stdlib.h>
 
-#define COLUMNS 75
-#define ROWS 75
+#define COLUMNS 50
+#define ROWS 50
 #define FPS 10
 
 extern short snakeDirect;
+bool gameOver=false;
+
+int score=0;
 
 void timer_callback(int);
 void display_callback();
@@ -39,7 +44,17 @@ void display_callback()
     glClear(GL_COLOR_BUFFER_BIT);
     drawGrid();
     snake();
+    spawnFood();
     glutSwapBuffers();
+    if(gameOver)
+    {
+        char _score[10];
+        itoa(score,_score,10);
+        char text[50] = "Score: ";
+        strcat(text,_score);
+        MessageBox(NULL,text,"GAME OVER",0);
+        exit(0);
+    }
 }
 
 void reshape_callback(int w, int h)
