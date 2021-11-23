@@ -1,11 +1,19 @@
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include <ctime>
 #include "game.h"
 
-int gridX, gridY;
-short snakeDirect = RIGHT;
+extern int score;
 
-float posX=37,posY=37;
+int gridX, gridY;
+int snakeLength = 5;
+bool food = true;
+int foodX,foodY;
+short snakeDirect = RIGHT;
+extern bool gameOver;
+
+float posX[75]={20,20,20,20,20},posY[75]={20,20,20,20,20};
 
 void initGrid(int x, int y)
 {
@@ -16,7 +24,7 @@ void initGrid(int x, int y)
 void unit (int,int);
 void drawGrid()
 {
-    for(int x=0;x<gridX;x++)
+    for(int x=0; x<gridX; x++)
     {
         for(int y=0;y<gridY;y++)
         {
@@ -46,16 +54,67 @@ void unit(int x, int y)
     glEnd();
 }
 
+void spawnFood()
+{
+    if(food)
+        random(foodX,foodY);
+    food = false;
+    glColor3f(0.0,1.0,0.0);
+    glRectf(foodX,foodY,foodX+1,foodY+1);
+}
+
 void snake()
 {
-    if(snakeDirect==UP)
-        posY++;
-    else if(snakeDirect==DOWN)
-        posY--;
-    else if(snakeDirect==RIGHT)
-        posX++;
-    else if(snakeDirect==LEFT)
-        posX--;
+    for(int i=snakeLength-1; i>0; i--)
+    {
+        posX[i] =  posX[i-1];
+        posY[i] =  posY[i-1];
+    }
 
-    glRectd(posX,posY,posX+1,posY+1);
+    if(snakeDirect==UP)
+        posY[0]++;
+    else if(snakeDirect==DOWN)
+        posY[0]--;
+    else if(snakeDirect==RIGHT)
+        posX[0]++;
+    else if(snakeDirect==LEFT)
+        posX[0]--;
+
+    for(int i=0; i<snakeLength; i++)
+    {
+        if(i==0)
+            glColor3f(1.0,0.0,0.0);
+        else
+            glColor3f(0.0,0.0,1.0);
+        glRectd(posX[i],posY[i],posX[i]+1,posY[i]+1);
+    }
+
+    if(posX[0]==0 || posX[0]==gridX-1 || posY[0]==0 || posY[0]==gridY-1)
+        gameOver=true;
+
+    if(posX[0]==foodX && posY[0]==foodY)
+    {
+        score++;
+        snakeLength++;
+        if(snakeLength>MAX)
+            snakeLength=MAX;
+        food = true;
+    }
+
+    for(int j=1; j<snakeLength; j++)
+    {
+        if(posX[j]==posX[0] && posY[j]==posY[0])
+            gameOver=true;
+    }
+
+}
+
+void random(int &x,int &y)
+{
+    int _maxX = gridX-3;
+    int _maxY = gridY-3;
+    int _min = 2;
+    srand(time(NULL));
+    x = _min + rand() % (_maxX-_min);
+    y = _min + rand() % (_maxY-_min);
 }
