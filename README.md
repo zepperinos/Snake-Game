@@ -7,6 +7,6 @@ Oleh:
   Aufar Faiq Fadhlullah (200535626844)
   Galih Carlos Putra Siregar ((200535626868)
 
-Nama Project File : "Tugas"
+Nama Project File : "SnakeGame"
 
 IDE : Code::Blocks v17.12
